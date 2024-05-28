@@ -1,3 +1,6 @@
+using JointChance
+using Test
+
 using JCC
 using Test
 using Random
@@ -21,7 +24,7 @@ prob1 = compute_with_SRD(1, κ, Σ, μ, 10000, MersenneTwister(1234))[1](x...)
 v = round.(prob, digits=6)
 v1 = round.(prob1, digits=6)
 
-@testset "JCC.jl" begin
+@testset "JointChance.jl" begin
     @test v ≈ 0.905384
     @test v1 ≈ 0.903887
 end

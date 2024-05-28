@@ -7,3 +7,4 @@ module JointChance
     include("SRD.jl")
     include("Genz.jl")
 end
+
