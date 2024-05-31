@@ -19,14 +19,11 @@ jobs:
       matrix:
         version:
           - '1.8'
-          - 'nightly'
         os:
           - ubuntu-latest
         arch:
           - x64
           - x86
-        allow_failures:
-          - julia: nightly
     steps:
       - uses: actions/checkout@v3
       - uses: julia-actions/setup-julia@v1
