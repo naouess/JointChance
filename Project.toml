@@ -3,6 +3,14 @@ uuid = "507959cc-378a-41b5-a287-a6d7388b6dc3"
 authors = ["Nesrine Ouanes"]
 version = "1.0.0-DEV"
 
+[deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+MvNormalCDF = "37188c8d-bc69-4638-b057-733e744175ec"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
+
 [compat]
 julia = "1.8"
 
