@@ -1,4 +1,4 @@
-using .JointChance
+using Main.JointChance
 using Test
 using Random
 
