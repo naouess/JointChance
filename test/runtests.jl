@@ -1,7 +1,4 @@
-using JointChance
-using Test
-
-using JCC
+using .JointChance
 using Test
 using Random
 
