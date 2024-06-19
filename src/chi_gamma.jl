@@ -12,7 +12,6 @@ function chi_cdf_gamma(x, c, gm)
     return cdf
 end
 
-# test 
 """
     Implementation of the gamma_inc function
 """
