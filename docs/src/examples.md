@@ -2,12 +2,15 @@
 
 ## First example
 
-Newsvendor
+Newsvendor with Individual Chance Constraint
+Newsvendor with Joint Chance Constraint
 
 ## Second example
 
-Financial portfolio
+Financial portfolio ICC
+Financial portfolio JCC
 
-## Third example
+## Third Example
 
-Hydropower management
+Hydropower Dispatch ICC
+Hydropower Dispatch JCC
