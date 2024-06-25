@@ -9,6 +9,5 @@ makedocs(
                ])
                
 deploydocs(;
-    repo="github.com/naouess/JointChance.jl.git",
-
+    repo="github.com/naouess/JointChance.jl",
 )
