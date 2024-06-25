@@ -13,8 +13,6 @@ Pages = ["index.md"]
 
 ## More description
 
-Here.
-
 ```math
 x^2 + \alpha
 ```
