@@ -1,6 +1,6 @@
 using JointChance
 using Test
-using Random
+# using Random
 
 p = 0.9
 μ = [5; 2; 4; 3;]

@@ -1,3 +1,9 @@
+"""
+    compute_with_genz(j, κ, Σ, μ, size, rng)
+	
+	explain arguments here
+
+"""
 function compute_with_genz(j, κ, Σ, μ, size, rng)  # JointProb_Genz() & JointProb_SRD
 	# TODO add checks about validity of inputs
 	a = vec([-Inf for i in eachindex(μ)])
