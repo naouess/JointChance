@@ -1,9 +1,13 @@
-# First example
+# Examples
+
+## First example
 
 Newsvendor
 
-# Second example
+## Second example
 
 Financial portfolio
 
-#
+## Third example
+
+Hydropower management
