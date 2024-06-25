@@ -7,7 +7,7 @@ on:
     tags: '*'
   pull_request:
 permissions:
-  contents: read
+  contents: write
   pages: write 
 jobs:
   build:
