@@ -8,12 +8,16 @@ Pages = ["index.md"]
 
 ## Install 
 ```julia repl
-# pkg> add https://github.com/naouess/JointChance
+# pkg> add "https://github.com/naouess/JointChance
 ```
 
 ## More description
 
 Here.
+
+```math
+x^2 + \alpha
+```
 
 ## Function documentation
 ```@docs

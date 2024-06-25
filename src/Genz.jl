@@ -1,7 +1,14 @@
 """
     compute_with_genz(j, κ, Σ, μ, size, rng)
 	
-	explain arguments here
+	This function takes 6 arguments:
+		- j is 
+		- ...
+	and returns this and this.
+
+	If some arguments are not specified, they take the default values:
+	- 
+	- 
 
 """
 function compute_with_genz(j, κ, Σ, μ, size, rng)  # JointProb_Genz() & JointProb_SRD
