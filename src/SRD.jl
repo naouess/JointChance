@@ -1,11 +1,11 @@
-"""
+#=
     ProbFunction(x, SampleOnSphere, mu)
 
 This function computes the probability of a given vector `x` 
 being less than or equal to a normal random variable `xi` 
 with mean `mu` and a given covariance matrix, based on a sample
 of points distributed on the unit sphere.
-"""
+=#
 function ProbFunction(x, SampleOnSphere, mu)
       
     SampleSize, M = size(SampleOnSphere)
@@ -132,11 +132,6 @@ function compute_with_SRD(w, κ, Σ, μ, size, rng)
     # TODO assert results
     return f, ∇f
 end 
-
-# TODO set default values for m and rng (fixed and large sample) fix this
-function compute_with_genz(j, κ, Σ, μ; size = 5000, rng = MersenneTwister(1234)) 
-	compute_with_genz(j, κ, Σ, μ, size = size, rng = rng)
-end
 
 function compute_with_SRD(w, κ, Σ, μ; size = 5000, rng = MersenneTwister(1234))
     compute_with_SRD(w, κ, Σ, μ, size = size, rng = rng)

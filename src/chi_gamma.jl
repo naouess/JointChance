@@ -12,9 +12,9 @@ function chi_cdf_gamma(x, c, gm)
     return cdf
 end
 
-"""
+#=
     Implementation of the gamma_inc function
-"""
+=#
 function my_gamma_inc(p, x, gm)
 
     exp_arg_min = -88.0
