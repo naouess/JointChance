@@ -2,7 +2,7 @@
 	```julia
 	compute_with_Genz(j, κ, Σ, μ, size, rng)
 	```
-	
+
 	This function computes a separable joint probability function and its gradient using 
 	Quasi-Monte Carlo. The function is defined as
 	
@@ -69,8 +69,9 @@ end
 
 """
 ```julia
-	add_constraints_Genz(m, x, idx, κ, Σ, μ, p)
+add_constraints_Genz(m, x, idx, κ, Σ, μ, p)
 ```
+
 """
 function add_constraints_Genz(m, x, idx, κ, Σ, μ, p) # Constraint_JointProb_Genz() & Constraint_JointProb_SRD
     for j in idx
