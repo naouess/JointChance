@@ -90,6 +90,7 @@ end
 	```julia
 	compute_with_SRD(j, κ, Σ, μ, size, rng)
 	```
+    
 	This function computes a separable joint probability function and its gradient using 
     Spherical Radial Decomposition. The function is defined as
 	
