@@ -13,6 +13,12 @@ Pages = ["index.md"]
 
 ## Resources for getting started
 
+Here some math stuff
+
+Some JuMP and Julia stuff
+
+Refer to our paper in Annals of OR
+
 ## The Math behind it all
 
 Here we explain Chance constraints 

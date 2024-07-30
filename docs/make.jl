@@ -6,8 +6,9 @@ makedocs(
          modules  = [JointChance],
          pages=[
                 "Home" => "index.md",
-                "Examples" => "examples.md",
-                "Functions" => "functions.md"
+                "Individual Chance Contraints" => "icc.md",
+                "Joint Chance Contraints" => "jcc.md",
+                "Examples" => "examples.md"
                ])
                
 deploydocs(;
