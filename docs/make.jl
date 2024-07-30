@@ -6,7 +6,8 @@ makedocs(
          modules  = [JointChance],
          pages=[
                 "Home" => "index.md",
-                "Examples" => "examples.md"
+                "Examples" => "examples.md",
+                "Functions" => "functions.md"
                ])
                
 deploydocs(;

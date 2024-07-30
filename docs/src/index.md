@@ -8,16 +8,11 @@ Pages = ["index.md"]
 
 ## Install 
 ```julia repl
-# pkg> add "https://github.com/naouess/JointChance
+# pkg> add "https://github.com/naouess/JointChance"
 ```
 
-## More description
+## Resources for getting started
 
-```math
-x^2 + \alpha
-```
+## The Math behind it all
 
-## Function documentation
-```@docs
-compute_with_genz
-```
+Here we explain Chance constraints 
