@@ -68,7 +68,7 @@ end
 
 """
 ```julia
-	add_constraints_Genz(j::, κ::, Σ, μ, size::, rng::)
+	add_constraints_Genz(m, x, idx, κ, Σ, μ, p)
 ```
 """
 function add_constraints_Genz(m, x, idx, κ, Σ, μ, p) # Constraint_JointProb_Genz() & Constraint_JointProb_SRD

@@ -162,6 +162,11 @@ function compute_with_SRD(w, κ, Σ, μ; size = 5000, rng = MersenneTwister(1234
     compute_with_SRD(w, κ, Σ, μ, size = size, rng = rng)
 end
 
+"""
+```julia
+	add_constraints_SRD(m, x, idx, κ, Σ, μ, p)
+```
+"""
 function add_constraints_SRD(m, x, idx, κ, Σ, μ, p)
     for j in idx
         JuMP.register(m, Symbol("srd_prob_$j"), length(x), compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[1], compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[2])
