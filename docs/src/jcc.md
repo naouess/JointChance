@@ -10,7 +10,7 @@ compute_with_Genz
 compute_with_SRD
 ```
 
-## Adding the probablity functions as constraints to an existing JuMP model
+## Adding the probablity function to a JuMP model
 
 ```@docs
 add_constraints_Genz
