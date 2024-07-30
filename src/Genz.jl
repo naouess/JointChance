@@ -2,7 +2,7 @@
 ```julia
 compute_with_Genz(j, κ, Σ, μ, size, rng)
 ```
-
+### Function  
 This function computes a separable joint probability function and its gradient using 
 Quasi-Monte Carlo. The function is defined as
 
@@ -10,6 +10,7 @@ Quasi-Monte Carlo. The function is defined as
 f(x) = h(x(t) ≥ ξ(t) ∀t = j, ..., j+κ).
 ```
 
+### Arguments
 The function takes 6 arguments:
 * `j` - index in Σ and μ from which the joint probability applies.
 * `κ` - duration of an outage
