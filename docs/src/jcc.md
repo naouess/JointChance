@@ -13,9 +13,9 @@ compute_with_SRD
 ## Adding the probablity function to a JuMP model
 
 ```@docs
-add_constraints_Genz
+add_JCC_Genz
 ```
 
 ```@docs
-add_constraints_SRD
+add_JCC_SRD
 ```

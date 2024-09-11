@@ -165,17 +165,17 @@ end
 
 """
 ```julia
-add_constraints_SRD(m, x, idx, κ, Σ, μ, p)
+add_JCC_SRD(m, x, idx, κ, Σ, μ, p)
 ```
 
 """
-function add_constraints_SRD(m, x, idx, κ, Σ, μ, p)
+function add_JCC_SRD(m, x, idx, κ, Σ, μ, p)
     for j in idx
-        JuMP.register(m, Symbol("srd_prob_$j"), length(x), compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[1], compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[2])
+        JuMP.add_nonlinear_operator(m, Symbol("srd_prob_$j"), length(x), compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[1], compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[2])
         JuMP.add_nonlinear_constraint(m, :($(Symbol("srd_prob_$j"))($(x...)) >= $(p)))
     end
 end
 
-function add_constraints_SRD(m, x, idx, κ, dist, p)
-    add_constraints_SRD(m, x, idx, κ, dist.Σ, dist.μ, p)
+function add_JCC_SRD(m, x, idx, κ, dist, p)
+    add_JCC_SRD(m, x, idx, κ, dist.Σ, dist.μ, p)
 end

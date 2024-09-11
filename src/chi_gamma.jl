@@ -1,3 +1,6 @@
+#=
+    TODO
+=#
 function chi_cdf_gamma(x, c, gm)
 
     if x <= 0.0
@@ -13,7 +16,8 @@ function chi_cdf_gamma(x, c, gm)
 end
 
 #=
-    Implementation of the gamma_inc function
+    Implementation of the gamma_inc function 
+    TODO
 =#
 function my_gamma_inc(p, x, gm)
 
@@ -127,6 +131,9 @@ function my_gamma_inc(p, x, gm)
     end
 end  
 
+#=
+    TODO
+=#
 function chi_pdf_gamma(x, c, gm)
    
     pdf = 0.0
