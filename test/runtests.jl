@@ -15,7 +15,7 @@ p = 0.9
 
 x = [8; 6; 7; 5;]
 
-prob  = compute_with_genz(1, κ, Σ, μ, 10000, MersenneTwister(1234))[1](x...)
+prob  = compute_with_Genz(1, κ, Σ, μ, 10000, MersenneTwister(1234))[1](x...)
 prob1 = compute_with_SRD(1, κ, Σ, μ, 10000, MersenneTwister(1234))[1](x...)
 
 v = round.(prob, digits=6)
