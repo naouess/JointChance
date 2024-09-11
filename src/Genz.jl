@@ -32,7 +32,7 @@ problem, the argument `rng` can take the values `RandomDevice()` #TODO
 function compute_with_Genz(j::Integer, κ::Integer, Σ::AbstractMatrix, μ::AbstractVector, s::Integer, rng)
 	
 	# assert validity of inputs 
-	@assert j, κ, s > 0 "The parameters j, κ, s should be strictly positive."
+	@assert all(v -> v > 0, (j, κ, s)) "The parameters j, κ, s should be strictly positive."
 	@assert size(Σ) == (length(μ), length(μ)) "The covariance matrix should be symetrical and have the same dimension as the mean vector μ."
 
 	a = vec([-Inf for i in eachindex(μ)])
