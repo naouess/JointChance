@@ -87,14 +87,14 @@ end
 
 """
 ```julia
-add_JCC_Genz(m::JuMP.Model, x:AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64)
+add_JCC_Genz(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64)
 ```
 
 This function allows to add joint chance constraints into a JuMP model. 
 To do so, it defines the probability function computed using the quasi-monte-carlo method defined in `compute_with_Genz` as 
 a user-defined operator and provides it also with the gradient, also computed using `compute_with_Genz.
 """
-function add_JCC_Genz(m::JuMP.Model, x:AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64)
+function add_JCC_Genz(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64)
     for j in idx
         JuMP.add_nonlinear_operator(m, Symbol("mvncdf_$j"), length(x), compute_with_Genz(j, κ, Σ, μ, 5000, MersenneTwister(1234))[1], compute_with_Genz(j, κ, Σ, μ, 5000, MersenneTwister(1234))[2])
         JuMP.add_nonlinear_constraint(m, :($(Symbol("mvncdf_$j"))($(x...)) >= $(p)))
