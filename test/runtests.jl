@@ -27,15 +27,13 @@ prob_srd1 = compute_with_SRD(1, κ, Σ, μ)[1](x...)
 v3 = round.(prob_qmc1, digits=6)
 v4 = round.(prob_srd1, digits=6)
 
-prob_qmc_default = zeros()
-prob_srd_default = zeros()
-for j in [1, 2]
-    prob_qmc_default = [prob_qmc_default[j] compute_with_QMC(j, κ-1, Σ, μ)[1](x...)]
-    prob_srd_default = [prob_srd_default[j] compute_with_SRD(j, κ-1, Σ, μ)[1](x...)]
-end
+prob_qmc_default_1 = compute_with_QMC(1, κ-1, Σ, μ)[1](x...)
+prob_qmc_default_2 = compute_with_QMC(2, κ-1, Σ, μ)[1](x...)
+prob_srd_default_1 = compute_with_SRD(1, κ-1, Σ, μ)[1](x...)
+prob_srd_default_2 = compute_with_SRD(2, κ-1, Σ, μ)[1](x...)
 
-v5 = round.(prob_qmc_default, digits=6)
-v6 = round.(prob_srd_default, digits=6)
+v5 = round.([prob_qmc_default_1 prob_qmc_default_2], digits=6)
+v6 = round.([prob_srd_default_1 prob_srd_default_2], digits=6)
 
 @testset "JointChance.jl" begin
     @test v1 == 0.905384
