@@ -96,9 +96,9 @@ computed using the quasi-monte-carlo method in `compute_with_QMC` as a user-defi
 and provides it also with the gradient, also computed using `compute_with_QMC.
 
 """
-# TODO update to non-legacy
 function add_JCC_QMC(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64)
     for j in idx
+		# TODO update to non-legacy
         JuMP.register(m, Symbol("mvncdf_$j"), length(x), compute_with_QMC(j, κ, Σ, μ, 5000, MersenneTwister(1234))[1], compute_with_QMC(j, κ, Σ, μ, 5000, MersenneTwister(1234))[2])
         JuMP.add_nonlinear_constraint(m, :($(Symbol("mvncdf_$j"))($(x...)) >= $(p)))
     end
