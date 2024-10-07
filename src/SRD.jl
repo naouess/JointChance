@@ -183,9 +183,9 @@ computed using the spherical radial decomposition method in `compute_with_SRD` a
 and provides it also with the gradient, also computed using `compute_with_SRD.
 
 """
-# TODO update to non-legacy
 function add_JCC_SRD(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64)
     for j in idx
+        # TODO update to non-legacy
         JuMP.register(m, Symbol("srd_prob_$j"), length(x), compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[1], compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[2])
         JuMP.add_nonlinear_constraint(m, :($(Symbol("srd_prob_$j"))($(x...)) >= $(p)))
     end
