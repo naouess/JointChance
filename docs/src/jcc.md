@@ -1,19 +1,19 @@
 # Joint probability functions
 
-## Computing a probability function and its gradient
+## Computing probability functions
 
 ```@docs
-compute_with_Genz
+compute_with_QMC
 ```
 
 ```@docs
 compute_with_SRD
 ```
 
-## Adding the probablity function to a JuMP model
+## Adding chance constraints to a JuMP model
 
 ```@docs
-add_JCC_Genz
+add_JCC_QMC
 ```
 
 ```@docs
