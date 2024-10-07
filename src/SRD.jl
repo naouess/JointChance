@@ -6,6 +6,7 @@ being less than or equal to a normal random variable `xi`
 with mean `mu` and a given covariance matrix, based on a sample
 of points distributed on the unit sphere.
 =#
+
 function ProbFunction(x, SampleOnSphere, mu)
       
     SampleSize, M = size(SampleOnSphere)
@@ -88,37 +89,44 @@ end
 
 """	
 ```julia
-compute_with_SRD(j, κ, Σ, μ, size, rng)
+compute_with_SRD(w::Integer, κ::Integer, Σ::AbstractMatrix, μ::AbstractVector, s::Integer, rng)
 ```
 
 This function computes a separable joint probability function and its gradient using 
-Spherical Radial Decomposition. The function is defined as
+Spherical Radial Decomposition. It returns an array consisting of the following function in its first element:
 
 ```math
-f(x) = h(x(t) ≥ ξ(t) ∀t = j, ..., j+κ).
+f(x) = \\mathbb{P}(g_i (x, ξ) ≥ 0 \\quad ∀i = j, ..., j+κ),
 ```
+
+As a second element, it returns the gradient of the above function, which is computed using the Prékopa theorem as explained in Section X.
 
 The function takes 6 arguments:
 * `w` - index in Σ and μ from which the joint probability applies.
-* `κ` - duration of an outage
+* `κ` - dimension of the multivariate distribution minus 1
 * `Σ` - covariance matrix
 * `μ` - mean vector
-* `size` - sample
+* `s` - sample
 * `rng` - random number generator
 
-If `size` and `rng` are not specified, they take the default values `size = 5000` and `rng = MersenneTwister(1234)`.
+If `s` and `rng` are not specified, they take the default values `s = 5000` and `rng = MersenneTwister(1234)`.
 With the latter, we fix the random number generator `rng` to guarantee the stability of the gradients in the solver iterations.
-This tempers with the precision of the solution found, yet it is necessary for solver convergence.
-# TODO formulate better here
+This tempers with the precision of the computation, yet it is necessary for solver convergence, in case the probability 
+function is used in an optimization problem. 
+If the goal is only the numerical computation of the probability function without further integration into an optimization
+problem, the argument `rng` can be unfixed by passing the value `RandomDevice()`
 
 """
-function compute_with_SRD(w, κ, Σ, μ, size, rng)
-    # TODO add checks about validity of inputs
+function compute_with_SRD(w::Integer, κ::Integer, Σ::AbstractMatrix, μ::AbstractVector, s::Integer = 5000, rng = MersenneTwister(1234))
+
+    # assert validity of inputs 
+	@assert all(v -> v > 0, (w, κ, s)) "The parameters w, κ, s should be strictly positive."
+	@assert size(Σ) == (length(μ), length(μ)) "The covariance matrix should be symetrical and have the same dimension as the mean vector μ."
 
     # Set dimension of each probability constraint
     dim_x = length(μ)
     dim_cons = κ + 1
-    SampleSize = size
+    SampleSize = s
 
     # Compute cholesky of covariance
     L = cholesky(Σ, check=true).L
@@ -150,32 +158,35 @@ function compute_with_SRD(w, κ, Σ, μ, size, rng)
             if i in w:w+κ
                 g[i] = ProbFunction(vec([x[r] for r in w:w+κ]), SampleOnSphere[:, k:k+κ], μ[w:w+κ])[2][i-w+1]
             else 
-                g[i] = 0.000
+                g[i] = 0.00000
             end 
         end
         return
     end
-    # TODO assert results
     return f, ∇f
 end 
 
-function compute_with_SRD(w, κ, Σ, μ; size = 5000, rng = MersenneTwister(1234))
-    compute_with_SRD(w, κ, Σ, μ, size = size, rng = rng)
-end
-
 """
 ```julia
-add_JCC_SRD(m, x, idx, κ, Σ, μ, p)
+add_JCC_SRD(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64)
 ```
 
+This function allows to add a system of joint chance constraints into a JuMP model as follows:
+
+```math
+∀ j in idx:
+f(x) = \\mathbb{P}(g_i (x, ξ) ≥ 0 \\quad ∀i = j, ..., j+κ) ≥ p
+```
+
+To add this system of nonlinear constraints to the model, the function defines the probability function 
+computed using the spherical radial decomposition method in `compute_with_SRD` as a user-defined operator 
+and provides it also with the gradient, also computed using `compute_with_SRD.
+
 """
-function add_JCC_SRD(m, x, idx, κ, Σ, μ, p)
+# TODO update to non-legacy
+function add_JCC_SRD(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64)
     for j in idx
-        JuMP.add_nonlinear_operator(m, Symbol("srd_prob_$j"), length(x), compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[1], compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[2])
+        JuMP.register(m, Symbol("srd_prob_$j"), length(x), compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[1], compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[2])
         JuMP.add_nonlinear_constraint(m, :($(Symbol("srd_prob_$j"))($(x...)) >= $(p)))
     end
-end
-
-function add_JCC_SRD(m, x, idx, κ, dist, p)
-    add_JCC_SRD(m, x, idx, κ, dist.Σ, dist.μ, p)
 end
