@@ -102,7 +102,7 @@ f(x) = \\mathbb{P}(g_i (x, ξ) ≥ 0 \\quad ∀i = j, ..., j+κ),
 As a second element, it returns the gradient of the above function, which is computed using the Prékopa theorem as explained in Section X.
 
 The function takes 6 arguments:
-* `w` - index in Σ and μ from which the joint probability applies.
+* `w` - index in Σ and μ from which the joint probability applies
 * `κ` - dimension of the multivariate distribution minus 1
 * `Σ` - covariance matrix
 * `μ` - mean vector
@@ -174,9 +174,20 @@ add_JCC_SRD(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, �
 This function allows to add a system of joint chance constraints into a JuMP model as follows:
 
 ```math
-∀ j in idx:
+
+∀ \\quad j \\text{ in } \\quad idx:
+
 f(x) = \\mathbb{P}(g_i (x, ξ) ≥ 0 \\quad ∀i = j, ..., j+κ) ≥ p
 ```
+
+The function takes 6 arguments:
+* `m` - a JuMP model
+* `x` - a vector of decision variables
+* `idx` - set of indices that constitue the starting time of a reliability window
+* `κ` - dimension of the multivariate distribution minus 1
+* `Σ` - covariance matrix
+* `μ` - mean vector
+* `p` - probability level that has to be met
 
 To add this system of nonlinear constraints to the model, the function defines the probability function 
 computed using the spherical radial decomposition method in `compute_with_SRD` as a user-defined operator 
