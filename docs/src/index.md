@@ -19,4 +19,4 @@ Refer to our paper in Annals of OR
 
 ## The math behind it all
 
-Here we explain Chance constraints 
+Here we explain Chance constraints XXX
