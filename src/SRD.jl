@@ -175,7 +175,7 @@ This function allows to add a system of joint chance constraints into a JuMP mod
 
 ```math
 
-∀ \\quad j \\text{ in } \\quad idx:
+∀ \\quad j \\text{ in} \\quad idx:
 
 f(x) = \\mathbb{P}(g_i (x, ξ) ≥ 0 \\quad ∀i = j, ..., j+κ) ≥ p
 ```
@@ -197,7 +197,7 @@ and provides it also with the gradient, also computed using `compute_with_SRD.
 function add_JCC_SRD(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64)
     for j in idx
         # TODO update to non-legacy
-        JuMP.register(m, Symbol("srd_prob_$j"), length(x), compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[1], compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[2])
-        JuMP.add_nonlinear_constraint(m, :($(Symbol("srd_prob_$j"))($(x...)) >= $(p)))
+        JuMP.register(m, Symbol("srd_prob_$(x)_$j"), length(x), compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[1], compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[2])
+        JuMP.add_nonlinear_constraint(m, :($(Symbol("srd_prob_$(x)_$j"))($(x...)) >= $(p)))
     end
 end
