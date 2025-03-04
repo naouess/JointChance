@@ -1,4 +1,4 @@
-using JointChance
+using Main.JointChance
 using Test
 using Random
 
@@ -15,7 +15,7 @@ p = 0.9
 
 x = [8; 6; 7; 5;]
 
-prob_qmc  = compute_with_QMC(1, κ, Σ, μ, 10000, MersenneTwister(1234))[1](x...)
+prob_qmc  = compute_with_QMC(1, κ, Σ, μ, false, 10000, MersenneTwister(1234))[1](x...)
 prob_srd = compute_with_SRD(1, κ, Σ, μ, 10000, MersenneTwister(1234))[1](x...)
 
 v1 = round.(prob_qmc, digits=6)

@@ -28,7 +28,7 @@ If the goal is only the numerical computation of the probability function withou
 problem, the argument `rng` can be unfixed by passing the value `RandomDevice()`.
 
 """
-function compute_with_QMC(j::Integer, κ::Integer, Σ::AbstractMatrix, μ::AbstractVector, double_sided::Bool, s::Integer = 5000, rng = MersenneTwister(1234))
+function compute_with_QMC(j::Integer, κ::Integer, Σ::AbstractMatrix, μ::AbstractVector, double_sided::Bool = false, s::Integer = 5000, rng = MersenneTwister(1234))
 	
 	# assert validity of inputs 
 	@assert all(v -> v > 0, (j, κ, s)) "The parameters j, κ, s should be strictly positive."
@@ -147,10 +147,11 @@ computed using the quasi-monte-carlo method in `compute_with_QMC` as a user-defi
 and provides it also with the gradient, also computed using `compute_with_QMC.
 
 """
-function add_JCC_QMC(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64)
+function add_JCC_QMC(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64, double_sided::Bool)
     for j in idx
 		# TODO update to non-legacy
-        JuMP.register(m, Symbol("mvncdf_$(x)_$j"), length(x), compute_with_QMC(j, κ, Σ, μ, 5000, MersenneTwister(1234))[1], compute_with_QMC(j, κ, Σ, μ, 5000, MersenneTwister(1234))[2])
+		# TODO make sample size and range more generalized, not only with default values
+        JuMP.register(m, Symbol("mvncdf_$(x)_$j"), length(x), compute_with_QMC(j, κ, Σ, μ, double_sided, 5000, MersenneTwister(1234))[1], compute_with_QMC(j, κ, Σ, μ, double_sided, 5000, MersenneTwister(1234))[2])
         JuMP.add_nonlinear_constraint(m, :($(Symbol("mvncdf_$(x)_$j"))($(x...)) >= $(p)))
     end
 end
