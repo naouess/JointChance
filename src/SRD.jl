@@ -1,10 +1,13 @@
 #=
     ProbFunction(x, SampleOnSphere, mu)
 
-This function computes the probability of a given vector `x` 
-being less than or equal to a normal random variable `xi` 
-with mean `mu` and a given covariance matrix, based on a sample
-of points distributed on the unit sphere.
+    This function computes the probability of a given vector `x` 
+    being less than or equal to a normal random variable `xi` 
+    with mean `mu` and a given covariance matrix, based on a sample
+    of points distributed on the unit sphere.
+
+    TODO 
+
 =#
 
 function ProbFunction(x, SampleOnSphere, mu)
@@ -117,11 +120,17 @@ If the goal is only the numerical computation of the probability function withou
 problem, the argument `rng` can be unfixed by passing the value `RandomDevice()`
 
 """
-function compute_with_SRD(w::Integer, κ::Integer, Σ::AbstractMatrix, μ::AbstractVector, s::Integer = 5000, rng = MersenneTwister(1234))
+#=
+	TODO
+	[ ] relax type definitions?
+	[ ] add more error and debugging hints
+=# 
+function compute_with_SRD(w::Integer, κ::Integer, Σ::AbstractMatrix, μ::AbstractVector, 
+    s::Integer = 5000, rng = MersenneTwister(1234))
 
-    # assert validity of inputs 
+    #  Validate inputs
 	@assert all(v -> v > 0, (w, κ, s)) "The parameters w, κ, s should be strictly positive."
-	@assert size(Σ) == (length(μ), length(μ)) "The covariance matrix should be symetrical and have the same dimension as the mean vector μ."
+	@assert size(Σ) == (length(μ), length(μ)) "Σ must be square and match the dimension of μ."
 
     # Set dimension of each probability constraint
     dim_x = length(μ)
@@ -132,16 +141,16 @@ function compute_with_SRD(w::Integer, κ::Integer, Σ::AbstractMatrix, μ::Abstr
     L = cholesky(Σ, check=true).L
 
     # Compute Sample on the sphere
-    SampleOnSphere = randn(rng, SampleSize, dim_cons*(dim_x-dim_cons+1))
+    SampleOnSphere = randn(rng, SampleSize, dim_cons * (dim_x - dim_cons + 1))
 
     for j in 1:dim_x-dim_cons+1
         i = dim_cons * (j-1) + 1
         for n = 1:SampleSize
-        # normalize sample (projection to sphere)
+            # Normalize sample (projection to sphere)
             v = SampleOnSphere[n, i:i+dim_cons-1]'
             v = v / norm(v)
 
-            # transformation with cholesky of covariance
+            # Transformation with cholesky of covariance
             v = L[j:j+dim_cons-1, j:j+dim_cons-1] * v'
 
             # save result
@@ -151,14 +160,16 @@ function compute_with_SRD(w::Integer, κ::Integer, Σ::AbstractMatrix, μ::Abstr
 
     k = (1+κ) * (w-1) + 1
 
-    f(x...) = ProbFunction(vec([x[r] for r in w:w+κ]), SampleOnSphere[:, k:k+κ], μ[w:w+κ])[1]
+    # f(x...) = ProbFunction(vec([x[r] for r in w:w+κ]), SampleOnSphere[:, k:k+κ], μ[w:w+κ])[1]
+    f(x...) = ProbFunction(collect(x[w:w+κ]), SampleOnSphere[:, k:k+κ], μ[w:w+κ])[1]
 
     function ∇f(g::AbstractVector{T}, x::T...) where {T}
         for i in eachindex(x)
             if i in w:w+κ
-                g[i] = ProbFunction(vec([x[r] for r in w:w+κ]), SampleOnSphere[:, k:k+κ], μ[w:w+κ])[2][i-w+1]
+                # g[i] = ProbFunction(vec([x[r] for r in w:w+κ]), SampleOnSphere[:, k:k+κ], μ[w:w+κ])[2][i-w+1]
+                g[i] = ProbFunction(collect(x[w:w+κ]), SampleOnSphere[:, k:k+κ], μ[w:w+κ])[2][i-w+1]
             else 
-                g[i] = 0.00000
+                g[i] = 0e-10
             end 
         end
         return
@@ -180,24 +191,42 @@ This function allows to add a system of joint chance constraints into a JuMP mod
 f(x) = \\mathbb{P}(g_i (x, ξ) ≥ 0 \\quad ∀i = j, ..., j+κ) ≥ p
 ```
 
-The function takes 6 arguments:
-* `m` - a JuMP model
-* `x` - a vector of decision variables
-* `idx` - set of indices that constitue the starting time of a reliability window
-* `κ` - dimension of the multivariate distribution minus 1
-* `Σ` - covariance matrix
-* `μ` - mean vector
-* `p` - probability level that has to be met
-
 To add this system of nonlinear constraints to the model, the function defines the probability function 
 computed using the spherical radial decomposition method in `compute_with_SRD` as a user-defined operator 
 and provides it also with the gradient, also computed using `compute_with_SRD.
 
+The function takes 6 arguments:
+    * `m` - a JuMP model
+    * `x` - a vector of decision variables
+    * `idx` - set of indices that constitue the starting time of a reliability window
+    * `κ` - dimension of the multivariate distribution minus 1
+    * `Σ` - covariance matrix
+    * `μ` - mean vector
+    * `p` - probability level that has to be met
+	* `s` - sample size
+	* `rng` - random number generator
+
+The arguments `s` and `rng` are optional. If not specified, they take the default values `s = 5000` and `rng = MersenneTwister(1234)`.
+With the latter, we fix the random number generator `rng` to guarantee the stability of the gradients in the solver iterations.
+This tempers with the precision of the computation, yet it is necessary for solver convergence, in case the probability 
+function is used in an optimization problem. 
+If the goal is only the numerical computation of the probability function without further integration into an optimization
+problem, the argument `rng` can be unfixed by passing the value `RandomDevice()`.
+
 """
-function add_JCC_SRD(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64)
+#=
+	TODO
+	[ ] debug non-legacy formulation (see below)
+=# 
+function add_JCC_SRD(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64, 
+    s::Integer = 5000, rng = MersenneTwister(1234))
     for j in idx
-        # TODO update to non-legacy
-        JuMP.register(m, Symbol("srd_prob_$(x)_$j"), length(x), compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[1], compute_with_SRD(j, κ, Σ, μ, 5000, MersenneTwister(1234))[2])
+		JuMP.register(m, Symbol("srd_prob_$(x)_$j"), length(x), compute_with_SRD(j, κ, Σ, μ, s, rng)[1], 
+                    compute_with_SRD(j, κ, Σ, μ, s, rng)[2])
         JuMP.add_nonlinear_constraint(m, :($(Symbol("srd_prob_$(x)_$j"))($(x...)) >= $(p)))
+
+		# Non-legacy reformulation:
+		# sym = add_nonlinear_operator(m, length(x), compute_with_SRD(j, κ, Σ, μ, s, rng)[1], compute_with_SRD(j, κ, Σ, μ, s, rng)[2]; name = Symbol("srd_prob_$(x)_$j"))
+        # @constraint(m, sym(x...) >= p)
     end
 end
