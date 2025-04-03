@@ -1,3 +1,8 @@
+#=
+	TODO
+	[ ] relax type definitions?
+	[ ] add more error and debugging hints
+=# 
 """	
 ```julia
 compute_with_QMC(j::Integer, κ::Integer, Σ::AbstractMatrix, μ::AbstractVector, s::Integer, rng)
@@ -31,11 +36,6 @@ If the goal is only the numerical computation of the probability function withou
 problem, the argument `rng` can be unfixed by passing the value `RandomDevice()`.
 
 """
-#=
-	TODO
-	[ ] relax type definitions?
-	[ ] add more error and debugging hints
-=# 
 function compute_with_QMC(j::Integer, κ::Integer, Σ::AbstractMatrix, μ::AbstractVector, 
 	two_sided::Bool = false, s::Integer = 5000, rng = MersenneTwister(1234))
 	
@@ -141,6 +141,10 @@ function compute_with_QMC(j::Integer, κ::Integer, Σ::AbstractMatrix, μ::Abstr
 	return f, ∇f
 end
 
+#=
+	TODO
+	[ ] debug non-legacy formulation (see below)
+=# 
 """
 ```julia
 add_JCC_QMC(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64)
@@ -179,10 +183,6 @@ If the goal is only the numerical computation of the probability function withou
 problem, the argument `rng` can be unfixed by passing the value `RandomDevice()`.
 
 """
-#=
-	TODO
-	[ ] debug non-legacy formulation (see below)
-=# 
 function add_JCC_QMC(m::JuMP.Model, x::AbstractVector, idx::AbstractArray, κ::Integer, Σ::AbstractMatrix, μ::AbstractArray, p::Float64, 
 	two_sided::Bool = false, s::Integer = 5000, rng = MersenneTwister(1234))
     for j in idx
